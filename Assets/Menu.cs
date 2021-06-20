@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class Menu : MonoBehaviour
     public GameObject inGameElements;
     public GameObject buttonContinue;
     public GameObject buttonNext;
+    public Text timeResultText;
     public LevelSwitcher levelSwitcher;
     
     void Start()
@@ -24,11 +26,13 @@ public class Menu : MonoBehaviour
         Time.timeScale = 0;
     }
 
-    public void OpenEndLevelMenu(bool stopTime)
+    public void OpenEndLevelMenu(bool stopTime, float timeResult = 0)
     {
         Pause(stopTime);
         buttonContinue.SetActive(false);
         buttonNext.SetActive(true);
+        timeResultText.gameObject.SetActive(true);
+        timeResultText.text = "Your time\n" + string.Format("{0:0.00}", timeResult);
     }
 
     public void OpenPauseMenu()
@@ -36,6 +40,7 @@ public class Menu : MonoBehaviour
         Pause();
         buttonContinue.SetActive(true);
         buttonNext.SetActive(false);
+        timeResultText.gameObject.SetActive(false);
     }
 
     public void Pause(bool stopTime = true)

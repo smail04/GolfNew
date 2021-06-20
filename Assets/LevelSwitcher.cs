@@ -53,6 +53,7 @@ public class LevelSwitcher : MonoBehaviour
         GameObject newLevel = Instantiate(level.gameObject, Vector3.zero, Quaternion.identity);
         newLevel.SetActive(true);        
         currentLevel = newLevel.GetComponent<Level>();
+        player.beltRenderer.material = currentLevel.beltColor;
         if (MovePlayerToStartPoint)
             player.MoveToStart();
     }

@@ -6,34 +6,28 @@ public class Finish : MonoBehaviour
 {
     public Level level;
     private bool isActive = true;
-    private LevelSwitcher levelSwitcher;
     private Menu menu;
 
     private void Start()
     {
-        levelSwitcher = FindObjectOfType<LevelSwitcher>();
         menu = FindObjectOfType<Menu>();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-            FinishLevel();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Ball>() && isActive)
+        Ball ball = other.GetComponent<Ball>();
+        if (ball && isActive)
         {
             isActive = false;
-            FinishLevel();            
+            ball.levelTimer.StopTimer();
+            FinishLevel(ball.levelTimer.Value);            
         }
     }
 
-    private void FinishLevel()
+    private void FinishLevel(float timeResult)
     {
         level.finished = true;
-        menu.OpenEndLevelMenu(false);
+        menu.OpenEndLevelMenu(false, timeResult);
     }
 
 }

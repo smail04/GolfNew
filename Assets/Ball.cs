@@ -17,21 +17,22 @@ public class Ball : MonoBehaviour
     public TrajectorySimulation trajectorySimulation;
     public ParticleSystem particles;
     public TrailRenderer trail;
-    public Menu menu;
+    public LevelTimer levelTimer;
     public LevelSwitcher levelSwitcher;
-    private float joystickRotationSensetivity = 5;
+    public Renderer beltRenderer;
+    private float joystickRotationSensetivity = 10;
     public float JoystickRotationSensetivity { get => joystickRotationSensetivity; set => joystickRotationSensetivity = value; }
     private bool joystickControlInverted;
     public bool JoystickControlInverted { get => joystickControlInverted; set => joystickControlInverted = value; }
 
     Vector3 startPosition;
     Quaternion startRotation;
-
-    
+    bool isMoved;
 
     private void Start()
     {
         JoystickControlInverted = false;
+        isMoved = false;
         startPosition = transform.position;
         startRotation = spectator.transform.rotation;
     }
@@ -73,7 +74,9 @@ public class Ball : MonoBehaviour
     }
 
     public void MoveToStart()
-    {        
+    {
+        isMoved = false;
+        levelTimer.Clear();
         ForceStop();
         transform.position = startPosition;
         spectator.transform.rotation = startRotation;
@@ -84,7 +87,11 @@ public class Ball : MonoBehaviour
     public void Charge()
     {
         state = BallState.Aiming;
-
+        if (!isMoved)
+        {
+            isMoved = true;
+            levelTimer.StartTimer();
+        }
         trajectorySimulation.Enabled = true;
         arrow.gameObject.SetActive(true); 
     }
