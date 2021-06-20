@@ -28,7 +28,7 @@ public class Ball : MonoBehaviour
     Vector3 startPosition;
     Quaternion startRotation;
     bool isMoved;
-
+    private float prevPoint = 0;
     private void Start()
     {
         JoystickControlInverted = false;
@@ -98,7 +98,13 @@ public class Ball : MonoBehaviour
 
     public void Aim()
     {
-        spectator.Rotate(new Vector3(0, ((JoystickControlInverted)? -1 : 1) * joystick.GetPositionRelativeToCenter().x / 10f, 0), JoystickRotationSensetivity * Time.deltaTime);
+        //spectator.Rotate(new Vector3(0, ((JoystickControlInverted)? -1 : 1) * joystick.GetPositionRelativeToCenter().x / 10f, 0), JoystickRotationSensetivity * Time.deltaTime);
+        
+        if (prevPoint != 0)
+        {
+            spectator.Rotate(new Vector3(0, -(prevPoint - Input.mousePosition.x) * ((JoystickControlInverted) ? -1 : 1), 0), JoystickRotationSensetivity * 10 * Time.deltaTime);
+        }
+        prevPoint = Input.mousePosition.x;
 
         Vector3 force = GetForceBasedOnJoystickPosition();
         trajectorySimulation.SimulatePath(gameObject, new Vector3(force.x, _rigidbody.velocity.y, force.z));
@@ -116,7 +122,7 @@ public class Ball : MonoBehaviour
     public void Release()
     {
         state = BallState.Moving;
-
+        prevPoint = 0;
         ForceStop();
         arrow.gameObject.SetActive(false);
         _rigidbody.AddForce(GetForceBasedOnJoystickPosition(), ForceMode.VelocityChange);
