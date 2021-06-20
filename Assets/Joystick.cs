@@ -38,6 +38,13 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
         stickImage.enabled = false;
     }
 
+    public void ReloadPosition()
+    {
+        stickTransform.position = boundTransform.position;
+        Hide();
+        onEndDrag.Invoke();
+    }
+
     public void SetStickPosition(Vector2 position)
     {
         stickTransform.position = position;

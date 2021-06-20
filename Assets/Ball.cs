@@ -77,6 +77,7 @@ public class Ball : MonoBehaviour
         ForceStop();
         transform.position = startPosition;
         spectator.transform.rotation = startRotation;
+        joystick.ReloadPosition();
         trail.Clear();
     }
 
