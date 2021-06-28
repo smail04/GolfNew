@@ -55,7 +55,7 @@ public class Ball : MonoBehaviour
         {
             if (spectator.transform.rotation.eulerAngles.x < 35)
                 spectator.VerticalTiltSmoothly(35, 9);
-            if (Camera.main.fieldOfView < 60)
+            if (spectator.mainCamera.fieldOfView < 60)
                 spectator.ChangeFOVSmoothly(60, 9);
         }
 
@@ -102,7 +102,7 @@ public class Ball : MonoBehaviour
         
         if (prevPoint != 0)
         {
-            spectator.Rotate(new Vector3(0, -(prevPoint - Input.mousePosition.x) * ((JoystickControlInverted) ? -1 : 1), 0), JoystickRotationSensetivity * 10 * Time.deltaTime);
+            spectator.Rotate(new Vector3(0, -(prevPoint - Input.mousePosition.x) * ((JoystickControlInverted) ? -1 : 1), 0), JoystickRotationSensetivity * 3 * Time.deltaTime);
         }
         prevPoint = Input.mousePosition.x;
 

@@ -25,6 +25,29 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
         Hide();
     }
 
+    private void Update()
+    {        
+        if (Input.touches.Length > 0)
+        {
+            Touch touch = Input.touches[0];
+            if (touch.phase == TouchPhase.Began)
+            {
+                Show();
+                onBeginDrag.Invoke();
+            }
+            else if (touch.phase == TouchPhase.Moved)
+            {
+                SetStickPosition(touch.position);
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                Hide();
+                onEndDrag.Invoke();
+            }
+
+        }
+    }
+
     public void Show()
     {
         boundImage.enabled = true;
@@ -57,18 +80,28 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Show();
-        onBeginDrag.Invoke();
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            Show();
+            onBeginDrag.Invoke();
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        SetStickPosition(Input.mousePosition);
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            SetStickPosition(Input.mousePosition);
+        }
     }   
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Hide();
-        onEndDrag.Invoke();
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            Hide();
+            onEndDrag.Invoke();
+        }
     }
+
 }

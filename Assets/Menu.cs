@@ -8,6 +8,11 @@ public class Menu : MonoBehaviour
     public GameObject menu;
     public GameObject endLevelMenu;
     public GameObject inGameElements;
+    public GameObject settingsMenu;
+
+    public Camera menuCamera;
+    public Camera mainCamera;    
+    
     public GameObject buttonContinue;
     public GameObject buttonNext;
     public Text timeResultText;
@@ -21,8 +26,44 @@ public class Menu : MonoBehaviour
     public void OpenMenu()
     {
         menu.SetActive(true);
+        settingsMenu.SetActive(false);
         endLevelMenu.SetActive(false);
         inGameElements.SetActive(false);
+        menuCamera.enabled = true;
+        mainCamera.enabled = false;
+        Time.timeScale = 0;
+    }
+
+    public void Pause(bool stopTime = true)
+    {
+        menu.SetActive(false);
+        settingsMenu.SetActive(false);
+        endLevelMenu.SetActive(true);
+        inGameElements.SetActive(false);
+        menuCamera.enabled = false;
+        mainCamera.enabled = true;
+        Time.timeScale = (stopTime) ? 0 : 1;
+    }
+
+    public void OpenGameLayer()
+    {
+        menu.SetActive(false);
+        settingsMenu.SetActive(false);
+        endLevelMenu.SetActive(false);
+        inGameElements.SetActive(true);
+        menuCamera.enabled = false;
+        mainCamera.enabled = true;
+        Time.timeScale = 1;
+    }
+
+    public void OpenSettings()
+    {
+        menu.SetActive(false);
+        settingsMenu.SetActive(true);
+        endLevelMenu.SetActive(false);
+        inGameElements.SetActive(false);
+        menuCamera.enabled = true;
+        mainCamera.enabled = false;
         Time.timeScale = 0;
     }
 
@@ -42,23 +83,7 @@ public class Menu : MonoBehaviour
         buttonNext.SetActive(false);
         timeResultText.gameObject.SetActive(false);
     }
-
-    public void Pause(bool stopTime = true)
-    {
-        menu.SetActive(false);
-        endLevelMenu.SetActive(true);
-        inGameElements.SetActive(false);
-        Time.timeScale = (stopTime) ? 0 : 1;
-    }
-
-    public void OpenGameLayer() 
-    {
-        menu.SetActive(false);
-        endLevelMenu.SetActive(false);
-        inGameElements.SetActive(true);
-        Time.timeScale = 1;
-    }
-
+    
     public void PlayButton()
     {
         if (levelSwitcher.currentLevel == null)

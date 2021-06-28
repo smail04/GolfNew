@@ -5,6 +5,7 @@ using UnityEngine;
 public class Spectator : MonoBehaviour
 {
     public Transform ball;
+    public Camera mainCamera;
     public float lerpDrag = 8;
 
     void Update()
@@ -24,11 +25,13 @@ public class Spectator : MonoBehaviour
 
     public void ChangeFOVSmoothly(int toAngle, int deltaTimeMultiplier)
     {
-        Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, toAngle, Time.deltaTime * deltaTimeMultiplier * (1f / Time.timeScale));
+        if (mainCamera.enabled)
+            mainCamera.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, toAngle, Time.deltaTime * deltaTimeMultiplier * (1f / Time.timeScale));
     }
 
     public void SetFOV(int angle)
     {
-        Camera.main.fieldOfView = angle;
+        if (mainCamera.enabled)
+            mainCamera.fieldOfView = angle;
     }
 }
