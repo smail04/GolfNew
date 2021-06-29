@@ -20,7 +20,7 @@ public class Ball : MonoBehaviour
     public LevelTimer levelTimer;
     public LevelSwitcher levelSwitcher;
     public Renderer beltRenderer;
-    private float joystickRotationSensetivity = 10;
+    private float joystickRotationSensetivity = 30;
     public float JoystickRotationSensetivity { get => joystickRotationSensetivity; set => joystickRotationSensetivity = value; }
     private bool joystickControlInverted;
     public bool JoystickControlInverted { get => joystickControlInverted; set => joystickControlInverted = value; }
@@ -33,6 +33,7 @@ public class Ball : MonoBehaviour
     {
         JoystickControlInverted = false;
         isMoved = false;
+        arrow.gameObject.SetActive(false);
         startPosition = transform.position;
         startRotation = spectator.transform.rotation;
     }
@@ -93,25 +94,39 @@ public class Ball : MonoBehaviour
             levelTimer.StartTimer();
         }
         trajectorySimulation.Enabled = true;
-        arrow.gameObject.SetActive(true); 
     }
 
     public void Aim()
     {
-        //spectator.Rotate(new Vector3(0, ((JoystickControlInverted)? -1 : 1) * joystick.GetPositionRelativeToCenter().x / 10f, 0), JoystickRotationSensetivity * Time.deltaTime);
-        
-        if (prevPoint != 0)
+        if (Application.platform == RuntimePlatform.WindowsEditor)
         {
-            spectator.Rotate(new Vector3(0, -(prevPoint - Input.mousePosition.x) * ((JoystickControlInverted) ? -1 : 1), 0), JoystickRotationSensetivity * 3 * Time.deltaTime);
+            if (prevPoint != 0)
+            {
+                spectator.Rotate(new Vector3(0, -(prevPoint - Input.mousePosition.x) * ((JoystickControlInverted) ? -1 : 1), 0), JoystickRotationSensetivity * Time.deltaTime);
+            }
+            prevPoint = Input.mousePosition.x;
         }
-        prevPoint = Input.mousePosition.x;
+        else 
+        {
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.touches[0];
+
+                if (touch.phase == TouchPhase.Moved)
+                {
+                    if (prevPoint != 0)
+                    {
+                        spectator.Rotate(new Vector3(0, -(prevPoint - touch.position.x) * ((JoystickControlInverted) ? -1 : 1), 0), JoystickRotationSensetivity * Time.deltaTime);
+                    }
+                    prevPoint = touch.position.x;
+                }
+            }
+        }
 
         Vector3 force = GetForceBasedOnJoystickPosition();
         trajectorySimulation.SimulatePath(gameObject, new Vector3(force.x, _rigidbody.velocity.y, force.z));
 
         Vector3 arrowTargetPosition = transform.position + new Vector3(spectator.transform.forward.x, 0, spectator.transform.forward.z);
-        arrow.LookAt(arrowTargetPosition, Vector3.up);
-        arrow.position = transform.position;
 
         Time.timeScale = Mathf.Lerp(Time.timeScale, 0.2f, Time.deltaTime * 15 * (1f / Time.timeScale));
 
@@ -124,7 +139,6 @@ public class Ball : MonoBehaviour
         state = BallState.Moving;
         prevPoint = 0;
         ForceStop();
-        arrow.gameObject.SetActive(false);
         _rigidbody.AddForce(GetForceBasedOnJoystickPosition(), ForceMode.VelocityChange);
 
         trajectorySimulation.Enabled = false;
