@@ -6,5 +6,6 @@ public class Level : MonoBehaviour
 {
     [HideInInspector] public int id;
     [HideInInspector] public bool finished = false;
+    public Sprite preview;
     public Material beltColor;
 }

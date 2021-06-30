@@ -9,6 +9,7 @@ public class Menu : MonoBehaviour
     public GameObject endLevelMenu;
     public GameObject inGameElements;
     public GameObject settingsMenu;
+    public GameObject selectLevelMenu;
 
     public Camera menuCamera;
     public Camera mainCamera;    
@@ -65,6 +66,16 @@ public class Menu : MonoBehaviour
         menuCamera.enabled = true;
         mainCamera.enabled = false;
         Time.timeScale = 0;
+    }
+
+    public void OpenSelectLevelMenu()
+    {
+        selectLevelMenu.SetActive(true);   
+    }
+
+    public void CloseSelectLevelMenu()
+    {
+        selectLevelMenu.SetActive(false);
     }
 
     public void OpenEndLevelMenu(bool stopTime, float timeResult = 0)
