@@ -10,6 +10,27 @@ public class LevelListItem : MonoBehaviour
     public Text levelName;
     public Text bestTime;
     public Image preview;
+
+    [SerializeField] private Image selfImage;
+    [SerializeField] private Button selfButton;
+
+    private bool isActive;
+
+    public bool IsActive
+    {
+        get { return isActive; }
+        set {
+            isActive = value;
+            selfImage.enabled = isActive;
+            selfButton.enabled = isActive;
+        }
+    }
+
+    public void Start()
+    {
+        IsActive = level.id <= PlayerPrefs.GetInt("LastFinishedLevel")+1;
+    }
+
     public void Select()
     {
         menu = FindObjectOfType<Menu>();

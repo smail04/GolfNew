@@ -93,10 +93,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: {fileID: 0}
-  levelSwitcher: {fileID: 0}
+  menu: {fileID: 0}
   levelName: {fileID: 227223847400524309}
   bestTime: {fileID: 227223848916653125}
   preview: {fileID: 227223847664803643}
+  selfImage: {fileID: 227223847112293274}
+  selfButton: {fileID: 705230925}
 --- !u!114 &705230925
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,6 +10,11 @@ public class LevelList : MonoBehaviour
 
     private void Start()
     {
+        UpdateList();
+    }
+
+    public void UpdateList()
+    {
         Clear();
         ShowList();
     }

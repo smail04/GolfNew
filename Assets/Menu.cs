@@ -18,7 +18,8 @@ public class Menu : MonoBehaviour
     public GameObject buttonNext;
     public Text timeResultText;
     public LevelSwitcher levelSwitcher;
-    
+    public LevelList levelList;
+
     void Start()
     {
         OpenMenu(); 
@@ -70,7 +71,9 @@ public class Menu : MonoBehaviour
 
     public void OpenSelectLevelMenu()
     {
-        selectLevelMenu.SetActive(true);   
+        levelList.UpdateList();
+        selectLevelMenu.SetActive(true);  
+        
     }
 
     public void CloseSelectLevelMenu()

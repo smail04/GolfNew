@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Finish : MonoBehaviour
 {
     public Level level;
     private bool isActive = true;
     private Menu menu;
+    private GameProgress progress;
 
     private void Start()
     {
         menu = FindObjectOfType<Menu>();
+        progress = FindObjectOfType<GameProgress>();        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -27,7 +30,8 @@ public class Finish : MonoBehaviour
     private void FinishLevel(float timeResult)
     {
         level.finished = true;
-        menu.OpenEndLevelMenu(false, timeResult);
+        progress.Save(level.id);
+        menu.OpenEndLevelMenu(false, timeResult);        
     }
 
 }
