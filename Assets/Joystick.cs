@@ -50,7 +50,6 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
                     lastPoint = touch.position;
 
                     Vector2 directionToLastPoint = lastPoint - firstPoint;
-                    //debugText.text = Vector2.Dot((new Vector2(firstPoint.x, 0) - firstPoint).normalized, directionToLastPoint.normalized).ToString();
                     if (Vector2.Dot((new Vector2(firstPoint.x, 0) - firstPoint).normalized, directionToLastPoint.normalized) > 0.7f)
                     {
                         SwipedDown();                        

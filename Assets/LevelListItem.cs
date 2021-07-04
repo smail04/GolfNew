@@ -46,7 +46,18 @@ public class LevelListItem : MonoBehaviour
     {
         this.level = level;
         levelName.text = "Level " + level.id;
-        bestTime.text = "Best: 00:00.0";
+        float bestTimeInSeconds = 0;
+        if (PlayerPrefs.HasKey("BestTimeLevel" + level.id))
+        {
+            bestTimeInSeconds = PlayerPrefs.GetFloat("BestTimeLevel" + level.id);
+            int mins = Mathf.FloorToInt(bestTimeInSeconds / 60);
+            float secs = bestTimeInSeconds - mins * 60;
+            bestTime.text = "Best: " + mins.ToString() + ":" + string.Format("{0:00.0}", secs);
+        }
+        else
+        {
+            bestTime.text = "Best: --:--.-";
+        }
         preview.sprite = level.preview;
         return this;
     }

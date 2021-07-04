@@ -40,14 +40,6 @@ public class Ball : MonoBehaviour
 
     private void Update()
     {
-        if (state == BallState.Moving)
-        {
-            if (_rigidbody.velocity.magnitude < 0.4)
-            {
-                ForceStop();
-            }
-        }
-
         if (Input.touchCount > 0)
         {
             Touch touch = Input.touches[0];
@@ -62,6 +54,14 @@ public class Ball : MonoBehaviour
             }
             else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
                 prevPoint = 0;
+        }
+
+        if (state == BallState.Moving)
+        {
+            if (_rigidbody.velocity.magnitude < 0.4)
+            {
+                ForceStop();
+            }
         }
 
         if (state == BallState.Aiming)

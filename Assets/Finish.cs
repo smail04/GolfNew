@@ -13,7 +13,7 @@ public class Finish : MonoBehaviour
     private void Start()
     {
         menu = FindObjectOfType<Menu>();
-        progress = FindObjectOfType<GameProgress>();        
+        progress = FindObjectOfType<GameProgress>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -30,6 +30,17 @@ public class Finish : MonoBehaviour
     private void FinishLevel(float timeResult)
     {
         level.finished = true;
+        if (PlayerPrefs.HasKey("BestTimeLevel" + level.id))
+        {
+            if (PlayerPrefs.GetFloat("BestTimeLevel" + level.id) > timeResult)
+            {
+                PlayerPrefs.SetFloat("BestTimeLevel" + level.id, timeResult);
+            }
+        }
+        else
+        {
+            PlayerPrefs.SetFloat("BestTimeLevel" + level.id, timeResult);
+        }
         progress.Save(level.id);
         menu.OpenEndLevelMenu(false, timeResult);        
     }
