@@ -48,6 +48,22 @@ public class Ball : MonoBehaviour
             }
         }
 
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.touches[0];
+
+            if (touch.phase == TouchPhase.Moved)
+            {
+                if (prevPoint != 0)
+                {
+                    spectator.Rotate(new Vector3(0, -(prevPoint - touch.position.x) * ((JoystickControlInverted) ? -1 : 1), 0), JoystickRotationSensetivity * Time.unscaledDeltaTime * 0.2f);
+                }
+                prevPoint = touch.position.x;
+            }
+            else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+                prevPoint = 0;
+        }
+
         if (state == BallState.Aiming)
         {
             Aim();
@@ -108,19 +124,7 @@ public class Ball : MonoBehaviour
         }
         else 
         {
-            if (Input.touchCount > 0)
-            {
-                Touch touch = Input.touches[0];
-
-                if (touch.phase == TouchPhase.Moved)
-                {
-                    if (prevPoint != 0)
-                    {
-                        spectator.Rotate(new Vector3(0, -(prevPoint - touch.position.x) * ((JoystickControlInverted) ? -1 : 1), 0), JoystickRotationSensetivity * Time.deltaTime);
-                    }
-                    prevPoint = touch.position.x;
-                }
-            }
+            
         }
 
         Vector3 force = GetForceBasedOnJoystickPosition();
@@ -153,7 +157,7 @@ public class Ball : MonoBehaviour
 
     private Vector3 GetForceBasedOnJoystickPosition()
     {
-        float force = Mathf.Clamp(Mathf.Abs(joystick.GetPositionRelativeToCenter().y) / 3, 0, 50);
+        float force = Mathf.Clamp(-(Mathf.Clamp(joystick.GetPositionRelativeToCenter().y, Mathf.NegativeInfinity, 0) / 3), 0, 50);
         return new Vector3(spectator.transform.forward.x, 0, spectator.transform.forward.z) * force;
     }
 

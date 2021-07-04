@@ -22,6 +22,8 @@ public class Menu : MonoBehaviour
 
     void Start()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
         OpenMenu(); 
     }
     

@@ -15,7 +15,7 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
     private Image stickImage;
     public UnityEvent onBeginDrag;
     public UnityEvent onEndDrag;
-
+    public Text debugText;
     private void Awake()
     {
         boundTransform = bound.GetComponent<RectTransform>();
@@ -25,27 +25,67 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
         Hide();
     }
 
+    private Vector2 firstPoint;
+    private Vector2 lastPoint;
+    bool swipeDown = false;
+
     private void Update()
-    {        
+    {
+        debugText.text = "FPS: " + (1 / Time.deltaTime).ToString();
         if (Input.touches.Length > 0)
         {
             Touch touch = Input.touches[0];
-            if (touch.phase == TouchPhase.Began)
-            {
-                Show();
-                onBeginDrag.Invoke();
-            }
-            else if (touch.phase == TouchPhase.Moved)
-            {
-                SetStickPosition(touch.position);
-            }
-            else if (touch.phase == TouchPhase.Ended)
-            {
-                Hide();
-                onEndDrag.Invoke();
-            }
 
+            if (!swipeDown)
+            {
+                if (touch.phase == TouchPhase.Began)
+                {
+                    //if (boundTransform.rect.Contains(touch.position))
+                    //{
+                        firstPoint = touch.position;
+                    //}
+                }
+                else if (touch.phase == TouchPhase.Moved)
+                {
+                    lastPoint = touch.position;
+
+                    Vector2 directionToLastPoint = lastPoint - firstPoint;
+                    //debugText.text = Vector2.Dot((new Vector2(firstPoint.x, 0) - firstPoint).normalized, directionToLastPoint.normalized).ToString();
+                    if (Vector2.Dot((new Vector2(firstPoint.x, 0) - firstPoint).normalized, directionToLastPoint.normalized) > 0.7f)
+                    {
+                        SwipedDown();                        
+                    }
+                }
+            }
+            else
+            {
+                if (Input.touches.Length > 0)
+                {
+                    if (touch.phase == TouchPhase.Moved)
+                    {
+                        SetStickPosition(touch.position);                        
+                    }
+                    else if (touch.phase == TouchPhase.Ended)
+                    {
+                        Hide();
+                        swipeDown = false;
+                        onEndDrag.Invoke();
+                    }
+                    else if (touch.phase == TouchPhase.Canceled)
+                    {
+                        swipeDown = false;
+                    }
+                }
+            }
         }
+        
+    }
+
+    void SwipedDown()
+    {
+        swipeDown = true;
+        Show();
+        onBeginDrag.Invoke();
     }
 
     public void Show()
@@ -70,7 +110,17 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
 
     public void SetStickPosition(Vector2 position)
     {
-        stickTransform.position = position;
+        Vector2 directionRelativeCenter = position - (Vector2)boundTransform.position;
+        float maxMagnitude = 500;
+        float magnitude = directionRelativeCenter.magnitude;
+        if (magnitude <= maxMagnitude)
+        {
+            stickTransform.position = position;
+        }
+        else
+        {
+            stickTransform.position = (Vector2)boundTransform.position + (directionRelativeCenter / magnitude * maxMagnitude);         
+        }
     }
 
     public Vector2 GetPositionRelativeToCenter()
@@ -82,7 +132,8 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
     {
         if (Application.platform == RuntimePlatform.WindowsEditor)
         {
-            Show();
+            Show(); 
+            firstPoint = Input.mousePosition;
             onBeginDrag.Invoke();
         }
     }
@@ -91,6 +142,9 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
     {
         if (Application.platform == RuntimePlatform.WindowsEditor)
         {
+            lastPoint = Input.mousePosition;
+            Debug.DrawRay(firstPoint, (lastPoint - firstPoint).normalized * Vector2.Distance(firstPoint, lastPoint), Color.red);
+            Debug.Log(Vector2.Dot(Vector2.down, (lastPoint - firstPoint).normalized));
             SetStickPosition(Input.mousePosition);
         }
     }   
