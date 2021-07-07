@@ -19,7 +19,15 @@ public class GameProgress : MonoBehaviour
 
     public void Save(int levelId)
     {
-       PlayerPrefs.SetInt("LastFinishedLevel", levelId); 
+        if (PlayerPrefs.HasKey("LastFinishedLevel"))
+        {
+            if (PlayerPrefs.GetInt("LastFinishedLevel") < levelId)
+                PlayerPrefs.SetInt("LastFinishedLevel", levelId);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("LastFinishedLevel", levelId);
+        }
     }
 
     public void Clear()
