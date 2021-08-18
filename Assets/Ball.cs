@@ -71,7 +71,7 @@ public class Ball : MonoBehaviour
         else 
         {
             if (spectator.transform.rotation.eulerAngles.x < 35)
-                spectator.VerticalTiltSmoothly(35, 9);
+                spectator.VerticalTiltSmoothly(30, 9);
             if (spectator.mainCamera.fieldOfView < 60)
                 spectator.ChangeFOVSmoothly(60, 9);
         }
@@ -134,8 +134,8 @@ public class Ball : MonoBehaviour
 
         Time.timeScale = Mathf.Lerp(Time.timeScale, 0.2f, Time.deltaTime * 15 * (1f / Time.timeScale));
 
-        spectator.ChangeFOVSmoothly(50, 9);
-        spectator.VerticalTiltSmoothly(25, 9);
+        spectator.ChangeFOVSmoothly(45, 9);
+        spectator.VerticalTiltSmoothly(15, 9);
     }
 
     public void Release()

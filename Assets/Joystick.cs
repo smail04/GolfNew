@@ -142,8 +142,6 @@ public class Joystick : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
         if (Application.platform == RuntimePlatform.WindowsEditor)
         {
             lastPoint = Input.mousePosition;
-            Debug.DrawRay(firstPoint, (lastPoint - firstPoint).normalized * Vector2.Distance(firstPoint, lastPoint), Color.red);
-            Debug.Log(Vector2.Dot(Vector2.down, (lastPoint - firstPoint).normalized));
             SetStickPosition(Input.mousePosition);
         }
     }   
